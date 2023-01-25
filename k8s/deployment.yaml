@@ -16,7 +16,15 @@ spec:
     spec:
       containers:
         - name: goserver
-          image: "gabrielmssantiago/hello-go:v5"
+          image: "gabrielmssantiago/hello-go:v5.1"
+
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            periodSeconds: 5
+            failureThreshold: 10
+
           readinessProbe:
             httpGet:
               path: /healthz
@@ -25,16 +33,16 @@ spec:
             failureThreshold: 1
             timeoutSeconds: 1
             successThreshold: 1
-            initialDelaySeconds: 10
 
-          # livenessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: 8000
-          #   periodSeconds: 5
-          #   failureThreshold: 3
-          #   timeoutSeconds: 1
-          #   successThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            periodSeconds: 5
+            failureThreshold: 1
+            timeoutSeconds: 1
+            successThreshold: 1
+
           envFrom:
             - configMapRef:
                 name: goserver-env
