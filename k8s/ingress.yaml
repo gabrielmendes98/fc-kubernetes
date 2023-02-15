@@ -4,6 +4,8 @@ metadata:
   name: ingress-host
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
   labels:
     name: ingress-host
 spec:
@@ -12,9 +14,13 @@ spec:
     http:
       paths:
       - pathType: Prefix
-        path: "/"
+        path: "/admin"
         backend:
           service:
             name: goserver-service
             port: 
               number: 80
+  tls:
+  - hosts:
+    - "ingress.fullcycle.com.br"
+    secretName: letsencrypt-tls
